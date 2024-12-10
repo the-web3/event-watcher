@@ -5,7 +5,7 @@ LDFLAGSSTRING +=-X main.GitCommit=$(GITCOMMIT)
 LDFLAGSSTRING +=-X main.GitDate=$(GITDATE)
 LDFLAGS := -ldflags "$(LDFLAGSSTRING)"
 
-TM_ABI_ARTIFACT := /Users/guoshijiang/theweb3/event-watcher/abis/TreasureManager.sol/TreasureManager.json
+TM_ABI_ARTIFACT := /Users/guoshijiang/S3WalletWorkSpace/event-watcher/abis/TreasureManager.sol/TreasureManager.json
 
 
 event-watcher:
@@ -24,7 +24,7 @@ bindings:
 	$(eval temp := $(shell mktemp))
 
 	cat $(TM_ABI_ARTIFACT) \
-		| jq -r .bytecode > $(temp)
+    	| jq -r .bytecode.object > $(temp)
 
 	cat $(TM_ABI_ARTIFACT) \
 		| jq .abi \

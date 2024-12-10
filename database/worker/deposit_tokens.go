@@ -13,7 +13,8 @@ type DepositTokens struct {
 	GUID         uuid.UUID      `gorm:"primaryKey" json:"guid"`
 	TokenAddress common.Address `json:"token_address" gorm:"serializer:bytes"`
 	Sender       common.Address `json:"sender" gorm:"serializer:bytes"`
-	Amount       *big.Int       `gorm:"serializer:u256"`
+	Amount       *big.Int       `json:"amount" gorm:"serializer:u256"`
+	BlockNumber  *big.Int       `json:"block_number" gorm:"serializer:u256"`
 	Timestamp    uint64
 }
 

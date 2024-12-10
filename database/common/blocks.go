@@ -22,7 +22,7 @@ type BlockHeader struct {
 }
 
 func (BlockHeader) TableName() string {
-	return "block_header"
+	return "block_headers"
 }
 
 type BlocksView interface {

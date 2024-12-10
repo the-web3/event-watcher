@@ -1,8 +1,9 @@
 package dapplink
 
 import (
-	"github.com/google/uuid"
 	"math/big"
+
+	"github.com/google/uuid"
 
 	"github.com/ethereum/go-ethereum/log"
 
@@ -17,9 +18,7 @@ func ProcessDepositEvents(db *database.DB, chainCfg config.ChainConfig, fromHeig
 	if err != nil {
 		return err
 	}
-	if len(txDepositTokens) > 0 {
-		log.Info("detected transaction deposits", "size", len(txDepositTokens))
-	}
+	log.Info("detected transaction deposit events", "size", len(txDepositTokens))
 
 	depositTk := make([]worker.DepositTokens, len(txDepositTokens))
 	for i := range txDepositTokens {
@@ -28,6 +27,7 @@ func ProcessDepositEvents(db *database.DB, chainCfg config.ChainConfig, fromHeig
 			TokenAddress: depositTk[i].TokenAddress,
 			Sender:       txDepositTokens[i].Sender,
 			Amount:       big.NewInt(0),
+			BlockNumber:  big.NewInt(1),
 			Timestamp:    txDepositTokens[i].Timestamp,
 		}
 	}

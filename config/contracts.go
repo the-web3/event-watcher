@@ -3,7 +3,7 @@ package config
 import "github.com/ethereum/go-ethereum/common"
 
 const (
-	TreasureManager = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+	TreasureManager = "0x01A51309328A0D6975376877C9e073D192E666DD"
 )
 
 var (

@@ -71,29 +71,31 @@ func (ep *EventProcessor) Close() error {
 }
 
 func (ep *EventProcessor) processTreasureManagerEvents() error {
-	log.Info("bridge", "l1", "kind", "initiated")
 	lastBlockNumber := big.NewInt(int64(ep.chainConfig.StartingHeight))
 	if ep.LatestBlockHeader != nil {
 		lastBlockNumber = ep.LatestBlockHeader.Number
 	}
-	log.Info("Process init l1 event", "lastBlockNumber", lastBlockNumber)
-
+	log.Info("Process treasure manager events", "lastBlockNumber", lastBlockNumber)
 	latestHeaderScope := func(db *gorm.DB) *gorm.DB {
 		newQuery := db.Session(&gorm.Session{NewDB: true})
 		headers := newQuery.Model(common.BlockHeader{}).Where("number > ?", lastBlockNumber)
 		return db.Where("number = (?)", newQuery.Table("(?) as block_numbers", headers.Order("number ASC").Limit(blocksLimit)).Select("MAX(number)"))
 	}
-
-	latestHeader, err := ep.db.Blocks.BlockHeaderWithScope(latestHeaderScope)
-	if err != nil {
-		return fmt.Errorf("failed to query new L1 state: %w", err)
-	} else if latestHeader == nil {
-		log.Debug("no new L1 state found")
+	if latestHeaderScope == nil {
 		return nil
 	}
+	latestHeader, err := ep.db.Blocks.BlockHeaderWithScope(latestHeaderScope)
+	if err != nil {
+		return fmt.Errorf("failed to query for latest unfinalized treasure manager events state: %w", err)
+	} else if latestHeader == nil {
+		log.Debug("no new state to process event")
+		return nil
+	}
+
 	fromHeight, toHeight := new(big.Int).Add(lastBlockNumber, bigint.One), latestHeader.Number
+	log.Info("handle event block range", "from", fromHeight, "end", toHeight)
 	if err := ep.db.Transaction(func(tx *database.DB) error {
-		log.Info("scanning for initiated bridge events", "fromHeight", fromHeight, "toHeight", toHeight)
+		log.Info("scanning for treasure manager events", "fromHeight", fromHeight, "toHeight", toHeight)
 		return dapplink.ProcessDepositEvents(tx, ep.chainConfig, fromHeight, toHeight)
 	}); err != nil {
 		return err
