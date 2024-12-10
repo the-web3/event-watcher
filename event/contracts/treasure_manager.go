@@ -16,7 +16,7 @@ import (
 type DepositTokensEvent struct {
 	TokenAddress common.Address
 	Sender       common.Address
-	amount       *big.Int
+	Amount       *big.Int
 	Timestamp    uint64
 	Raw          types.Log
 }
@@ -57,7 +57,7 @@ func DepositTokensEvents(contractAddress common.Address, db *database.DB, fromHe
 			txDepositTokenItem := DepositTokensEvent{
 				TokenAddress: depositTokenEvent.TokenAddress,
 				Sender:       depositTokenEvent.Sender,
-				amount:       depositTokenEvent.Amount,
+				Amount:       depositTokenEvent.Amount,
 				Timestamp:    uint64(time.Now().Unix()),
 			}
 			txDepositTokens = append(txDepositTokens, txDepositTokenItem)

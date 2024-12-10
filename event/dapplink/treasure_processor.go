@@ -26,7 +26,7 @@ func ProcessDepositEvents(db *database.DB, chainCfg config.ChainConfig, fromHeig
 			GUID:         uuid.New(),
 			TokenAddress: depositTk[i].TokenAddress,
 			Sender:       txDepositTokens[i].Sender,
-			Amount:       big.NewInt(0),
+			Amount:       txDepositTokens[i].Amount,
 			BlockNumber:  big.NewInt(1),
 			Timestamp:    txDepositTokens[i].Timestamp,
 		}

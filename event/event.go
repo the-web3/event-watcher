@@ -3,6 +3,7 @@ package event
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"gorm.io/gorm"
 	"math/big"
 	"time"
@@ -82,7 +83,7 @@ func (ep *EventProcessor) processTreasureManagerEvents() error {
 		return db.Where("number = (?)", newQuery.Table("(?) as block_numbers", headers.Order("number ASC").Limit(blocksLimit)).Select("MAX(number)"))
 	}
 	if latestHeaderScope == nil {
-		return nil
+		return errors.New("latest header scope is nil")
 	}
 	latestHeader, err := ep.db.Blocks.BlockHeaderWithScope(latestHeaderScope)
 	if err != nil {
